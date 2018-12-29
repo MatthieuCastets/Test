@@ -14,15 +14,33 @@ dossier_destination=args.output_directory
 p=Path(dossier_source)
 liste_fichiers=p.glob('**/*.markdown')
 
+is_liste=False
+
 for fichier in liste_fichiers:
     texte_remplacement=""
     with open(fichier, 'r', encoding='utf-8') as mon_fichier:
         for ligne in mon_fichier:
-            new_ligne=""
+            new_ligne=ligne
             # Gestion des titres
-            if '#' in ligne:
-                nb_diese=ligne.count('#')
+            if '#' in new_ligne:
+                nb_diese=new_ligne.count('#')
                 balise="<h{}>".format(nb_diese)
-                new_ligne=balise+ligne[nb_diese:-1]+(balise[:1]+'/'+balise[1:])+'\n'
-            print(new_ligne)
-            
+                new_ligne=balise+new_ligne[nb_diese:-1]+(balise[:1]+'/'+balise[1:])+'\n'
+            # Gestion des listes
+            if new_ligne[0]=='*':
+                if not is_liste:
+                    texte_remplacement += "<ul>\n"
+                    is_liste=True
+                new_ligne="<li>"+ligne[1:].strip()+"</li>\n"         
+            elif is_liste:
+                texte_remplacement+="</ul>\n"
+                is_liste=False
+            # Gestion des textes importants
+            while '*' in new_ligne:
+                index_etoile=new_ligne.index('*')
+                new_ligne=new_ligne[:index_etoile]+"<em>"+ new_ligne[index_etoile+1:]
+                index_etoile=new_ligne.index('*')
+                new_ligne=new_ligne[:index_etoile]+"</em>"+ new_ligne[index_etoile+1:]
+
+            texte_remplacement+=new_ligne
+        print(texte_remplacement)
