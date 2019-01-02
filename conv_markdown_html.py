@@ -13,21 +13,26 @@ args=parser.parse_args()
 if args.input_directory is None or not os.path.isdir(args.input_directory):
     print("Veuillez renseigner un repertoire des fichiers source markdown valide")
     exit()
-
-dossier_source=args.input_directory
-dossier_destination=args.output_directory
+dossier_source=os.path.abspath(args.input_directory)
 print("Dossier source :", dossier_source)
+
+if args.output_directory is None or not os.path.isdir(args.output_directory):
+    print("Fichier destinataire non valide")
+    exit()
+dossier_destinataire=os.path.abspath(args.output_directory)
+print("Dossier destinataire :", dossier_destinataire)
+
 chemin_dossier_source=Path(dossier_source)
-chemin_dossier_destination=Path(dossier_destination)
 
 liste_fichiers=chemin_dossier_source.glob('**/*.markdown')
 
 is_liste=False
 expression_url=r"(http(s)?://[a-z0-9]+\.[a-z0-9]+)"
 
-for fichier in liste_fichiers:
+for fichier_source in liste_fichiers:
     texte_remplacement=""
-    with open(fichier, 'r', encoding='utf-8') as mon_fichier:
+    os.chdir(dossier_source)
+    with open(fichier_source, 'r', encoding='utf-8') as mon_fichier:
         for ligne in mon_fichier:
             new_ligne=ligne
             # Gestion des titres
@@ -55,5 +60,8 @@ for fichier in liste_fichiers:
                 new_ligne=re.sub(expression_url, "<a href=\"\\1\">\\1</a>", new_ligne)
             
             texte_remplacement+=new_ligne
-
-        print(texte_remplacement)
+        os.chdir(dossier_destinataire)
+        nom_fichier_destinataire=str(fichier_source)[str(fichier_source).rindex('/')+1:str(fichier_source).index('.')]
+        with open("{}.html".format(nom_fichier_destinataire), 'w', encoding='utf-8') as fichier_destination:
+            fichier_destination.write(texte_remplacement)
+            print("Ecriture du fichier {}.html".format(nom_fichier_destinataire))
