@@ -1,4 +1,5 @@
 import argparse
+import re
 from pathlib import Path
 
 parser = argparse.ArgumentParser(description="Convertisseur code Markdown en HTML")
@@ -15,6 +16,7 @@ p=Path(dossier_source)
 liste_fichiers=p.glob('**/*.markdown')
 
 is_liste=False
+expression_url=r"(http(s)?://[a-z0-9]+\.[a-z0-9]+)"
 
 for fichier in liste_fichiers:
     texte_remplacement=""
@@ -41,6 +43,11 @@ for fichier in liste_fichiers:
                 new_ligne=new_ligne[:index_etoile]+"<em>"+ new_ligne[index_etoile+1:]
                 index_etoile=new_ligne.index('*')
                 new_ligne=new_ligne[:index_etoile]+"</em>"+ new_ligne[index_etoile+1:]
-
+            # Gestion des URLs
+            if re.search(expression_url, new_ligne) is not None:
+                new_ligne=re.sub(expression_url, "<a href=\"\\1\">\\1</a>", new_ligne)
+            
             texte_remplacement+=new_ligne
+        
         print(texte_remplacement)
+        
