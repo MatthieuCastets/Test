@@ -1,19 +1,26 @@
 import argparse
 import re
+import os
 from pathlib import Path
 
 parser = argparse.ArgumentParser(description="Convertisseur code Markdown en HTML")
 parser.add_argument("-i", "--input-directory", help="Chemin du dossier contenant les fichiers sources Markdowns")
-parser.add_argument("-o", "--output-directory", help="Chemin du dossier qui contiendra les fichiers générés")   
+parser.add_argument("-o", "--output-directory", help="Chemin du dossier qui contiendra les fichiers générés")
 parser.add_argument("-t", "--template-directory", action="store_true", help="Chemin du dossier template")
 parser.parse_args()
 args=parser.parse_args()
 
+if args.input_directory is None or not os.path.isdir(args.input_directory):
+    print("Veuillez renseigner un repertoire des fichiers source markdown valide")
+    exit()
+
 dossier_source=args.input_directory
 dossier_destination=args.output_directory
+print("Dossier source :", dossier_source)
+chemin_dossier_source=Path(dossier_source)
+chemin_dossier_destination=Path(dossier_destination)
 
-p=Path(dossier_source)
-liste_fichiers=p.glob('**/*.markdown')
+liste_fichiers=chemin_dossier_source.glob('**/*.markdown')
 
 is_liste=False
 expression_url=r"(http(s)?://[a-z0-9]+\.[a-z0-9]+)"
@@ -48,6 +55,5 @@ for fichier in liste_fichiers:
                 new_ligne=re.sub(expression_url, "<a href=\"\\1\">\\1</a>", new_ligne)
             
             texte_remplacement+=new_ligne
-        
+
         print(texte_remplacement)
-        
