@@ -1,4 +1,4 @@
-# Conversion markdown_to_html
+# Conversion de fichier markdown en fichier HTML
 
 Ce programme permet de générer à partir d'un dossier de fichiers markdown, des fichiers html qui appairetront dans le dossier voulu.
 
@@ -25,5 +25,5 @@ Les expressions ne peuvent être traduit en HTML que si elles respectent le sch�
 
 Il est obligatoire de mentionner un dossier source et un dossier de réception lorsque l'on fait appel au programme.
 
-
+Seul les fichiers d'extension *markdown* sont reconnus par le programme afin d'être convertit en HTML. 
  
