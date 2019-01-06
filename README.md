@@ -21,7 +21,9 @@ Les noms des fichiers générés reprennent le nom du fichier source associé. J
 Les expressions ne peuvent être traduit en HTML que si elles respectent le schéma suivant :
 * *Titre* : Seul les lignes commençant par des # sont considérés comme des titres et le nombre de # représente le niveu du titre
 * *Listes non ordonnées* : Le programme considère comme liste non ordonnée toute ligne commençant par *.
-* *Textes importants* : Les textes importants seront considérés comme tel pour tout ensemble de caractère entourés par deux *.
+* *Textes importants* : Les textes importants seront considérés comme tel pour tout ensemble de caractère entourés par deux *. 
+
+Il est aussi important de préciser que si l'on met un mot important en début de ligne, cela sera considéré comme une liste d'un seul élément à la place d'un mot important à cause d'une erreur de conception.
 
 Il est obligatoire de mentionner un dossier source et un dossier de réception lorsque l'on fait appel au programme.
 
